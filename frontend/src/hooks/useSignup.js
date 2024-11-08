@@ -29,6 +29,7 @@ const useSignup = () => {
     try {
       const res = await fetch("http://localhost:7000/api/auth/signup", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           fullName,

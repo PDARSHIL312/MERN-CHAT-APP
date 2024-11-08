@@ -3,19 +3,18 @@ import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { Buffer } from "buffer";
-import util from "util";
-if (typeof global !== "undefined") {
-  global.Buffer = Buffer;
-}
-
 import connectToMongoDb from "./db/connectToMongoDB.js";
 import authRoutes from "./routes/authRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import { app, server } from "./socket/socket.js";
 
 dotenv.config();
 
-const app = express();
+if (typeof global !== "undefined" && !global.Buffer) {
+  global.Buffer = Buffer;
+}
+
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -23,20 +22,18 @@ app.use(
     credentials: true,
   })
 );
-app.use(express.json()); // this is allow us to excess the body element like username or password or others too  from req.body()
-const PORT = process.env.PORT || 7000;
 
+app.use(express.json());
 app.use(cookieParser());
 
-// app.get("/", (req, res) => {
-//   res.send("Welcome!!!");
-// });
-
+// Register routes
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/user", userRoutes);
 
-app.listen(7000, () => {
+const PORT = process.env.PORT || 7000;
+
+server.listen(PORT, () => {
   connectToMongoDb();
-  console.log("started on the 7000");
+  console.log(`Server started on port ${PORT}`);
 });

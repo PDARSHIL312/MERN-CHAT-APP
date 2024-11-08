@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client"; // Correct import
 import App from "./App";
 import { BrowserRouter } from "react-router-dom"; // Ensure BrowserRouter is imported
 import { AuthContextProvider } from "./context/AuthContext";
+import SocketContextProvider from "./context/SocketContextProvider";
 
 // Select the root element
 const container = document.getElementById("root");
@@ -12,7 +13,9 @@ createRoot(container).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthContextProvider>
-        <App />
+        <SocketContextProvider>
+          <App />
+        </SocketContextProvider>
       </AuthContextProvider>
     </BrowserRouter>
   </React.StrictMode>
